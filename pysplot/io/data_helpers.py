@@ -66,6 +66,7 @@ def _transform_into_skycoord(dataframe, frame, units, coord_kwargs={}):
             coord = frame(data[:,0]*units[0], data[:,1]*units[1], obstime=obstimes, **coord_kwargs)
     return coord
 
+
 def _transform_into_quantity(dataframe, units):
     """
     Convert the values in a Pandas DataFrame to an Astropy Quantity object by applying the specified units.
@@ -151,9 +152,9 @@ def _convert_coordinates(spatial, desired_coord=None, coord_kwargs={}):
     if (spatial.skycoord is not None) and (desired_coord is not None) and (spatial.coord != desired_coord):
         transformed_skycoord = spatial.skycoord.transform_to(desired_coord(obstime=spatial.data.index, **coord_kwargs))
         ## TODO: have choice of what type of representation for output (cartesian, cyclindrical, etc)
-        skycoord_cols = transformed_skycoord.get_representation_component_names().keys()#transformed_skycoord._data.__dict__.keys()
+        skycoord_cols = transformed_skycoord.get_representation_component_names().keys()
         for col,scol in zip(spatial.columns, skycoord_cols):
-            vals = transformed_skycoord.__getattr__(scol).value#_data.__dict__[scol].value
+            vals = transformed_skycoord.__getattr__(scol).value
             transformed_df[col] = vals
         transformed_df.rename(columns={c: sc for c,sc in zip(spatial.columns, skycoord_cols)}, inplace=True)
     else:
@@ -161,7 +162,42 @@ def _convert_coordinates(spatial, desired_coord=None, coord_kwargs={}):
         transformed_skycoord = spatial.skycoord
     return transformed_df, transformed_skycoord
 
+
 def _convert_units(science, desired_units=None):
+    """
+    Converts the units of a `science.quantity` object to the desired units.
+
+    This function takes a `science` object (which is expected to be a 
+    `science.quantity` type) and transforms its values into the specified 
+    `desired_units`. If no desired units are provided, it defaults to the 
+    current units of the `science` object.
+
+    Parameters:
+    -----------
+    science : object
+        An object containing a `quantity` attribute (e.g., astropy.quantity) 
+        with data and units. The object should also have a `columns` attribute 
+        and a `data` attribute, which holds the raw data values in a 
+        `pandas.DataFrame`.
+        
+    desired_units : str, optional
+        The units to which the `science.quantity` should be converted. If 
+        `None`, the current units of the `science` object will be used.
+
+    Returns:
+    --------
+    transformed_df : pandas.DataFrame
+        A DataFrame with the same index as the original `science.data`, 
+        containing the transformed values in the desired units. If no units 
+        transformation is needed, the original data is returned unchanged.
+
+    Notes:
+    ------
+    - If the `science` object does not have units (`science.units is None`), 
+      the original data is returned without any conversion.
+    - If the units of the `science.quantity` are already equal to the desired 
+      units, no transformation will occur.
+    """
     transformed_df = pd.DataFrame()
     transformed_df.index = science.data.index
     if science.units is not None:
@@ -175,11 +211,6 @@ def _convert_units(science, desired_units=None):
     else:
         transformed_df = science.data
     return transformed_df
-        #science.converted_quantity = transformed_quantity
-        #science.units = desired_units
-        #for i,col in enumerate(science.columns):
-        #    science.data[col] = transformed_quantity[:,i]
-    
 
 
 def _match_data_cadence(location_data, science_data, data_cadence=None, interpolation_method='time', combine_method='mean'):
@@ -233,17 +264,14 @@ def _match_data_cadence(location_data, science_data, data_cadence=None, interpol
     -------
     >>> location_data = pd.DataFrame({'x': [1, 2, 3]}, index=pd.to_datetime(['2023-01-01', '2023-01-02', '2023-01-03']))
     >>> science_data = pd.DataFrame({'y': [4, 5, 6]}, index=pd.to_datetime(['2023-01-01', '2023-01-03', '2023-01-05']))
-    >>> merged_data = _match_data_cadence(location_data, science_data, data_cadence='D', combine_method='mean')
+    >>> merged_data = _match_data_cadence(location_data, science_data, data_cadence='1T', combine_method='mean')
     """
     ## set combine method function
     combine_method_dict = {
         'mean': np.nanmean, 
         'median': np.nanmedian,
     }
-    if combine_method in combine_method_dict:
-        combine_method_function = combine_method_dict[combine_method]
-    #else:
-        #TODO: return and throw error
+    combine_method_function = combine_method_dict[combine_method]
     if science_data is not None:
         merged_data = location_data.join(science_data, how='outer')
     else:
@@ -256,6 +284,7 @@ def _match_data_cadence(location_data, science_data, data_cadence=None, interpol
     else:
         merged_data = merged_data.resample(data_cadence).apply(combine_method_function)
     return merged_data
+
 
 def _transform_into_dataframe(list_of_data, column_names=[], combine_axis='columns'):
     """
@@ -337,31 +366,30 @@ def _validate_data(data):
     """Validates the format of input data."""
     if not isinstance(data, dict):
         raise TypeError("Input data must be a dictionary.")
-    
     if 'x' not in data:
         raise KeyError("Input data must contain the 'x' key.")
     if 'y' not in data:
         raise KeyError("Each dictionary in the location list must contain the 'y' key.")
-    
+
+
 def _validate_coord(coord):
     """Validates the coordinate system (either from sunpy or astropy)."""
     if coord is not None:
-        # Check if coord is an instance of SkyCoord (astropy)
         if coord in [v[1] for v in inspect.getmembers(astropy.coordinates, inspect.isclass)]:
             return
-        # Check if coord is an instance of any valid SunPy frame (sunpy.coordinates.frames.BaseFrame)
         if coord in [v[1] for v in inspect.getmembers(sunpy.coordinates, inspect.isclass)]:
             return
         raise TypeError("Desired coordinate must be a valid coordinate system from sunpy.coordinates or astropy.coordinates.")
 
+
 def _validate_units(units):
     """Validates the units as from astropy.units."""
     if units is not None:
-        # Check if coord is an instance of SkyCoord (astropy)
         if type(units) in [v[1] for v in inspect.getmembers(astropy.units, inspect.isclass)]:
             return
         return TypeError("Desired units must be a class within astropy.units.")
     
+
 def _validate_interpolation_method(interpolation_method):
     """Validates the interpolation method."""
     ##TODO: change to not hardcoding valid methods

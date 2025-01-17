@@ -1,4 +1,3 @@
-import pandas as pd
 from pysplot.io.data_helpers import _transform_into_dataframe, _transform_into_skycoord, _transform_into_quantity, _convert_coordinates, _convert_units, _match_data_cadence, _validate_coord, _validate_data, _validate_units, _validate_interpolation_method
 
 
@@ -128,6 +127,8 @@ class ScienceData:
         if not isinstance(science, list):
             science = [science]
             science_columns_names = [science_columns_names]
+
+        # do data validation checks
         for s in science:
             _validate_data(s)
         if units is not None:
@@ -211,23 +212,15 @@ class SpatialTimeData:
     """
     def __init__(self, spatial, science=None, interpolation_method='linear', data_cadence=None, combine_method='mean', desired_units=None, desired_coord=None, desired_coord_kwargs={}):
         
-        # Validate location
+        # do data validation checks
         if not isinstance(spatial, SpatialData):
             raise TypeError("Input should be a SpatialData object.")
-        
-        # Validate science (optional)
         if science is not None:
             if not isinstance(science, ScienceData):
                 raise TypeError("Input should be a ScienceData object.")
-        
-        # Validate combine_method
         if combine_method.lower() not in ['mean', 'median']:
             raise TypeError("Combine method {combine_method} is not an acceptable method. Must be 'mean' or 'median'.")
-        
-        # Validate desired_units (optional)
         _validate_units(desired_units)
-        
-        # Validate desired_coord (optional)
         _validate_coord(desired_coord)
 
         self.spatial = spatial
