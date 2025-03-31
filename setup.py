@@ -17,8 +17,7 @@ setup(
     ],
     install_requires=[                   # List of dependencies
         'sunpy>=5.1.5',                          # SunPy (for solar physics coordinates and data)
-        "pandas>=2.2.3",                        # Pandas (for data manipulation)
-        "matplotlib>=3.9.0"             # matplotlib for plotting
+        "pandas>=2.2.3"                        # Pandas (for data manipulation)
     ],
     python_requires='>=3.9',              # Python version requirements
 )
