@@ -1,7 +1,3 @@
-Sure! Here's a general template for a README file for a Python package. You can modify it based on the specifics of your package.
-
----
-
 # pysplot: Spatiotemporal Plotting in Python
 
 The `pysplot` package makes spatial visualizations with heliophysics timeseries data.
