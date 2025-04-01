@@ -14,7 +14,7 @@ To install the package:
 1. Clone package onto local machine and switch to correct branch
 ```
 git clone https://github.com/pysplot/pysplot.git
-git checkout whpi-notebook
+git checkout whpi-example
 ```
 2. Use `pip` to install package:
 ```
