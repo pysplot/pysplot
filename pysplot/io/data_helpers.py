@@ -528,7 +528,6 @@ def _transform_into_dataframe(list_of_data, column_names=[], combine_axis='colum
             ncol=1
         else:
             ncol = np.shape(data['y'])[1]
-        ##TODO: check column and data length match.
         if ncol==1:
             dataframe[columns[0]] = data['y']
         else:
@@ -575,3 +574,16 @@ def _validate_interpolation_method(interpolation_method):
     valid_methods = ['linear', 'time', 'index', 'polynomial', 'nearest', 'spline', 'barycentric', 'pchip']
     if interpolation_method not in valid_methods:
         raise ValueError(f"Invalid interpolation method. Expected one of {valid_methods}, got '{interpolation_method}'.")
+
+def _check_column_length(data, column_names, prefix=''):
+    column_names_checked = []
+    for d, dcols in zip(data, column_names):
+        if len(np.shape(d['y']))==1:
+            ncols=1
+        else:
+            ncols=np.shape(d['y'])[1]
+        dcols_length = len(dcols)
+        if dcols_length!=ncols:
+            dcols = [f'{prefix}_{i}' for i in range(1,ncols+1)]
+        column_names_checked.append(dcols)
+    return column_names_checked

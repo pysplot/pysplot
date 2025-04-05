@@ -1,6 +1,6 @@
-# pysplot: Spatiotemporal Plotting in Python
+# `pysplot`: Spatiotemporal Plotting in Python
 
-The `pysplot` package makes spatial visualizations with heliophysics timeseries data.
+The `pysplot` package hosts tools and visualization methods for making spatial and temporal plots with heliophysics timeseries data.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -11,15 +11,16 @@ The `pysplot` package makes spatial visualizations with heliophysics timeseries 
 ## Installation
 
 To install the package:
-1. Clone package onto local machine and switch to correct branch
 ```
-git clone https://github.com/pysplot/pysplot.git
-git checkout whpi-example
+pip install pysplot
 ```
-2. Use `pip` to install package:
+Install additional dependencies if running through the examples:
 ```
-cd /path/to/pysplot
-pip install .
+pip install pysplot[examples]
+```
+or using the WHPI-specific tools:
+```
+pip install pysplot[whpi]
 ```
 
 ## Usage
@@ -30,6 +31,10 @@ After installation, you can use the package as follows:
 from pysplot.io.data import SpatialData, ScienceData, SpatialTimeData
 from pysplot.plots.plottypes import orbit_plot
 import matplotlib.pyplot as plt
+
+# input data as dictionaries
+spatial_data_dictionary = {'x': [...], 'y': [...]}
+science_data_dictionary = {'x': [...], 'y': [...]}
 
 # Initiate data objects
 spatial_data = SpatialData(spatial_data_dictionary)

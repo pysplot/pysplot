@@ -1,4 +1,4 @@
-from pysplot.io.data_helpers import _transform_into_dataframe, _transform_into_skycoord, _transform_into_quantity, _convert_coordinates, _convert_units, match_data_cadence, _validate_coord, _validate_data, _validate_units, _validate_interpolation_method, _adjust_skycoord, _rename_dataframe_with_skycoord_columns
+from pysplot.io.data_helpers import _transform_into_dataframe, _transform_into_skycoord, _transform_into_quantity, _convert_coordinates, _convert_units, match_data_cadence, _validate_coord, _validate_data, _validate_units, _validate_interpolation_method, _adjust_skycoord, _rename_dataframe_with_skycoord_columns, _check_column_length
 import pandas as pd
 
 class SpatialData:
@@ -110,6 +110,7 @@ class SpatialData:
         if units is not None:
             _validate_units(units)
         _validate_interpolation_method(interpolation_method)
+        spatial_columns_names = _check_column_length(spatial, spatial_columns_names, prefix='spatial')
         
         dataframe, columns = _transform_into_dataframe(spatial, column_names=spatial_columns_names, combine_axis=combine_axis)
         if drop_duplicates:
@@ -210,13 +211,15 @@ class ScienceData:
         ## TODO: add coordinates to science values
         if not isinstance(science, list):
             science = [science]
-            science_columns_names = [science_columns_names]
+            science_columns_names = [science_columns_names]           
+
 
         # do data validation checks
         for s in science:
             _validate_data(s)
         if units is not None:
             _validate_units(units)
+        science_columns_names = _check_column_length(science, science_columns_names, prefix='science')
 
         dataframe, columns = _transform_into_dataframe(science, column_names=science_columns_names)
         if drop_duplicates:
