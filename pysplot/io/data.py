@@ -114,7 +114,7 @@ class SpatialData:
         
         dataframe, columns = _transform_into_dataframe(spatial, column_names=spatial_columns_names, combine_axis=combine_axis)
         if drop_duplicates:
-            dataframe = dataframe.drop_duplicates(keep='first')
+            dataframe = dataframe[~dataframe.index.duplicated(keep='first')]
         skycoord = _transform_into_skycoord(dataframe, coord, units, coord_kwargs=coord_kwargs)
         self.data = dataframe
         self.columns = columns
@@ -223,7 +223,7 @@ class ScienceData:
 
         dataframe, columns = _transform_into_dataframe(science, column_names=science_columns_names)
         if drop_duplicates:
-            dataframe = dataframe.drop_duplicates(keep='first')
+            dataframe = dataframe[~dataframe.index.duplicated(keep='first')]
         self.data = dataframe
         self.columns = columns
         self.units = units
