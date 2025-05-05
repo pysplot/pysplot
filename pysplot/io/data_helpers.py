@@ -6,10 +6,16 @@ import sunpy.coordinates
 import astropy.units
 
 def _frame_has_obstime(frame):
-    if 'obstime' in frame.__dict__['frame_attributes']:
-        return True
-    else:
-        return False
+    try:
+        if 'obstime' in frame.frame_attributes:
+            return True
+        else:
+            return False
+    except Exception:
+        if 'obstime' in frame.__dict__['frame_attributes']:
+            return True
+        else:
+            return False
 
 
 def _transform_into_skycoord(dataframe, frame, units, coord_kwargs={}):
@@ -26,7 +32,7 @@ def _transform_into_skycoord(dataframe, frame, units, coord_kwargs={}):
 
     frame : sunpy.coordinates.frame or astropy.coordinates.frame
         The coordinate frame class to use for creating the SkyCoord object. 
-        Typically a SunPy or Astropy frame, such as GCRS, ICRS, etc.
+        Typically a SunPy or Astropy frame, such as ICRS, Heliocentric, etc.
 
     units : astropy.units or list of astropy.units
         The units for the coordinates in the DataFrame. If a single unit is provided, it is applied to all coordinates.
@@ -47,7 +53,6 @@ def _transform_into_skycoord(dataframe, frame, units, coord_kwargs={}):
     - The function assumes that the number of columns in `dataframe` corresponds to the dimensionality of the coordinate system:
       - 3 columns → xyz coordinates
       - 2 columns → latitude/longitude or similar
-    - If a coordinate does not have a unit specified (i.e., `None`), it will default to unit 1.
     
     Example
     -------
@@ -65,12 +70,12 @@ def _transform_into_skycoord(dataframe, frame, units, coord_kwargs={}):
     units = [v if v is not None else 1 for v in units]
     if frame is not None:
         if data.shape[1]==3:
-            if _frame_has_obstime(frame):
+            if _frame_has_obstime(frame)==True:
                 coord = frame(data[:,0]*units[0], data[:,1]*units[1], data[:,2]*units[2], obstime=obstimes, **coord_kwargs)
             else:
                 coord = frame(data[:,0]*units[0], data[:,1]*units[1], data[:,2]*units[2], **coord_kwargs)
         elif data.shape[1]==2:
-            if _frame_has_obstime(frame):
+            if _frame_has_obstime(frame)==True:
                 coord = frame(data[:,0]*units[0], data[:,1]*units[1], obstime=obstimes, **coord_kwargs)
             else:
                 coord = frame(data[:,0]*units[0], data[:,1]*units[1], **coord_kwargs)
@@ -194,7 +199,7 @@ def _rename_dataframe_with_skycoord_columns(df, skycoord, frame, spatial_columns
         A list of column names in the DataFrame that correspond to the spatial coordinates (e.g., x, y, z, etc.) 
         that will be replaced with values from the SkyCoord object.
 
-    desired_units : str, `astropy.units.Unit`, or list of str/`astropy.units.Unit`
+    desired_units : str, `astropy.units.Unit`, or list of `astropy.units.Unit`
         The units to apply to the coordinate data. If a single unit is provided, it will be applied to all columns. 
         If a list of units is provided, it should have the same length as the number of spatial columns in the DataFrame.
         If `None` is provided for a unit, no transformation will be applied to that column.
@@ -271,7 +276,7 @@ def _convert_coordinates(spatial, desired_coord=None, coord_kwargs={}, desired_u
         Additional keyword arguments to pass to the `desired_coord` frame constructor. This allows for frame-specific 
         parameters to be provided (default is an empty dictionary).
 
-    desired_units : str, `astropy.units.Unit`, optional
+    desired_units : `astropy.units.Unit`, optional
         The units to apply to the transformed coordinates. If `None`, no unit transformation is applied 
         (default is `None`).
 
@@ -328,7 +333,7 @@ def _convert_units(science, desired_units=None):
         It should also have a `columns` attribute (representing the column names) and a `data` attribute, 
         which holds the raw data values in a `pandas.DataFrame`.
 
-    desired_units : str, `astropy.units.Unit`, optional
+    desired_units : `astropy.units.Unit`, optional
         The units to which the `science.quantity` should be converted. If `None`, the current units of the 
         `science` object will be retained. If a unit is specified, the values in the `science.quantity` object 
         will be converted to this unit.
@@ -576,14 +581,20 @@ def _validate_interpolation_method(interpolation_method):
         raise ValueError(f"Invalid interpolation method. Expected one of {valid_methods}, got '{interpolation_method}'.")
 
 def _check_column_length(data, column_names, prefix=''):
+    """Checks that columns provided are the correct length given the data. Otherwise create default column names."""
     column_names_checked = []
-    for d, dcols in zip(data, column_names):
-        if len(np.shape(d['y']))==1:
+    if len(data) > len(column_names):
+        n_column_names_missing = len(data) - len(column_names)
+        for _ in range(n_column_names_missing):
+            column_names.append([])
+    for d, dat in enumerate(data):
+        dcols = column_names[d]
+        if len(np.shape(dat['y']))==1:
             ncols=1
         else:
-            ncols=np.shape(d['y'])[1]
+            ncols=np.shape(dat['y'])[1]
         dcols_length = len(dcols)
         if dcols_length!=ncols:
-            dcols = [f'{prefix}_{i}' for i in range(1,ncols+1)]
+            dcols = [f'{prefix}_data{d}_{i}' for i in range(1,ncols+1)]
         column_names_checked.append(dcols)
     return column_names_checked

@@ -59,11 +59,11 @@ class SpatialData:
 
     Example
     -------
-    >>> spatial_data = [{'x': [0, 1, 2], 'y': [[1, 2], [3, 4], [5, 6]]}]
-    >>> spatial_data_obj = SpatialData(spatial_data, coord=sunpy.coordinates.Heliocentric, units=u.AU, combine_axis='columns')
+    >>> spatial_data = {'x': ['2020-01-01T00:00:00', '2020-01-01T01:00:00','2020-01-01T02:00:00'],
+                        'y': [[1.2351352, 15.014284, -18.71197], [1.1890574, 14.771348, -18.227575], [1.0073503, 14.434054, -17.547987]]}
+    >>> spatial_data_obj = SpatialData(spatial_data, coord=sunpy.coordinates.Heliocentric, spatial_columns_names=['x','y','z'], units=astropy.units.AU, combine_axis='columns', coord_kwargs={'representation_type':'cartesian'})
     >>> print(spatial_data_obj.data)
     >>> print(spatial_data_obj.skycoord)
-
     """
     def __init__(self, spatial, coord=None, units=None, combine_axis='columns', interpolation_method='linear', spatial_columns_names=[], coord_kwargs={}, drop_duplicates=True):        
         """
@@ -169,8 +169,8 @@ class ScienceData:
 
     Example
     -------
-    >>> science_data = [{'x': [0, 1, 2], 'y': [[10, 20], [30, 40], [50, 60]]}]
-    >>> science = ScienceData(science_data, units='km/s', science_columns_names=[['Velocity X', 'Velocity Y']])
+    >>> science_data = {'x': [0, 1, 2], 'y': [[10, 20], [30, 40], [50, 60]]
+    >>> science = ScienceData(science_data, units=astropy.units.km/astropy.units.s, science_columns_names=['Velocity X', 'Velocity Y'])
     >>> print(science.data)
        Velocity X  Velocity Y
     0          10          20
@@ -314,7 +314,7 @@ class SpatialTimeData:
     -------
     >>> spatial_data_object = SpatialData(...)
     >>> science_data_object = ScienceData(...)
-    >>> splot_data_obj = SpatialTimeData(spatial_data_object, science_data_object=science_data, 
+    >>> splot_data_obj = SpatialTimeData(spatial_data_object, science=science_data_object, 
     >>>                                      interpolation_method='linear', 
     >>>                                      data_cadence='1T', combine_method='mean')
     >>> print(splot_data_obj.data)  # Merged and processed spatiotemporal data
