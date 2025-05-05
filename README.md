@@ -16,11 +16,11 @@ pip install pysplot
 ```
 Install additional dependencies if running through the examples:
 ```
-pip install pysplot[examples]
+pip install pysplot"[examples]"
 ```
 or using the WHPI-specific tools:
 ```
-pip install pysplot[whpi]
+pip install pysplot"[whpi]"
 ```
 
 ## Usage
