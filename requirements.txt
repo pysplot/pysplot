@@ -1,0 +1,9 @@
+# Main dependencies
+sunpy
+pandas
+matplotlib
+
+# Development dependencies (for Read the Docs, testing, etc.)
+sphinx
+sphinx_rtd_theme
+pytest
