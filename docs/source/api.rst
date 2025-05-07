@@ -1,14 +1,27 @@
 API Reference
 =============
 
-This section documents the public API of the `pysplot` package.
-
-pysplot Package
----------------
+pysplot
+-------
 
 .. automodule:: pysplot
    :members:
    :undoc-members:
    :show-inheritance:
-   :special-members: __init__
-   :exclude-members: __weakref__
+
+pysplot.io
+----------
+
+.. automodule:: pysplot.io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+pysplot.util
+-------------
+
+.. automodule:: pysplot.util
+   :members:
+   :undoc-members:
+   :show-inheritance:
