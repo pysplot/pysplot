@@ -16,11 +16,11 @@ pip install pysplot
 ```
 Install additional dependencies if running through the examples:
 ```
-pip install pysplot[examples]
+pip install pysplot"[examples]"
 ```
 or using the WHPI-specific tools:
 ```
-pip install pysplot[whpi]
+pip install pysplot"[whpi]"
 ```
 
 ## Usage
@@ -33,20 +33,26 @@ from pysplot.plots.plottypes import orbit_plot
 import matplotlib.pyplot as plt
 
 # input data as dictionaries
-spatial_data_dictionary = {'x': [...], 'y': [...]}
-science_data_dictionary = {'x': [...], 'y': [...]}
+spatial_data_dictionary = {
+    'x': ['2020-01-01 01:00', '2020-01-01 02:00', '2020-01-01 03:00'], 
+    'y': [[0,1,2],[3,4,5],[6,7,8]]
+}
+science_data_dictionary = {
+    'x': ['2020-01-01 02:03', '2020-01-01 02:30', '2020-01-01 02:45'], 
+    'y': [[1.08, 14.14, -16.24], [1.39, 14.08, -17.80], [1.86, 13.56, -18.79]]
+}
 
 # Initiate data objects
-spatial_data = SpatialData(spatial_data_dictionary)
-science_data = ScienceData(science_data_dictionary)
-combined_splot_data = SpatialTimeData(spatial_data, science=science_data)
+spatial_data = SpatialData(spatial_data_dictionary, spatial_columns_names=['x','y','z'])
+science_data = ScienceData(science_data_dictionary, science_columns_names=['Bx', 'By', 'Bz'])
+combined_data = SpatialTimeData(spatial_data, science=science_data)
 
 # Make plots
 fig, ax = plt.subplots()
-orbit_plot(combined_splot_data.data, ax, 'x', 'y')
+orbit_plot(combined_data.data, ax, 'x', 'y')
 ```
 
-For a full example of how to use `pysplot`, refer to our example notebooks.
+For a full example of how to use `pysplot`, refer to our [Getting Started notebook](examples/getting_started.ipynb).
 
 
 ## Contributing
