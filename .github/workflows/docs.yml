@@ -2,29 +2,33 @@ name: Build Docs
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  docs:
-
+  build-docs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
-        pip install .[docs]
-        pip install sphinx sphinx-rtd-theme
+        python -m pip install --upgrade pip
+        pip install -r docs/requirements.txt
+        pip install .
 
-    - name: Build Docs
+    - name: Build documentation
       run: |
-        cd docs
-        make html
+        sphinx-build -b html docs/source docs/_build/html
+
+    - name: Check for broken links and warnings
+      run: |
+        sphinx-build -n -W --keep-going -b html docs/source docs/_build/html
