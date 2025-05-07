@@ -7,3 +7,4 @@ matplotlib
 sphinx
 sphinx_rtd_theme
 pytest
+myst_parser
