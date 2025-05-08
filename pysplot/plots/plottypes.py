@@ -1,8 +1,7 @@
-"""Different types of spatial plots"""
+"""Different types of spatial plots."""
 
 def orbit_plot(data, ax, x_axis_column, y_axis_column, plotting_kwargs={}):
-    """
-    Plots the orbit data on a specified axis.
+    """Plots the orbit data on a specified axis.
 
     This function takes a DataFrame containing orbit data and creates a plot of the specified columns 
     along the x and y axes. It allows for customization of the plot through additional keyword arguments 
@@ -57,8 +56,7 @@ def orbit_plot(data, ax, x_axis_column, y_axis_column, plotting_kwargs={}):
 
 
 def spatial_value_plot(data, ax, x_axis_column, science_column, plotting_kwargs={}):
-    """
-    Plots scientific values against spatial coordinates on a specified axis.
+    """Plots scientific values against spatial coordinates on a specified axis.
 
     This function takes a DataFrame containing spatial and science data and creates a plot of the 
     specified columns along the x and y axes. The plot can be customized using additional keyword 

@@ -1,4 +1,5 @@
-"""Code for finding, downloading, and reading static coronal hole synoptic map images from NOAA produced for WHPI project."""
+"""Code for finding, downloading, and reading static coronal hole synoptic map
+images from NOAA produced for WHPI project."""
 
 import requests
 from bs4 import BeautifulSoup
@@ -9,9 +10,7 @@ import os
 import numpy as np
 
 def get_chmap_files():
-    """
-    Get list of coronal hole map files hosted at NOAA.
-    """
+    """Get list of coronal hole map files hosted at NOAA."""
     url = 'https://www.ngdc.noaa.gov/stp/space-weather/solar-data/solar-imagery/composites/synoptic-maps/mc-intosh/ARCHIVE_CHONLY/LEVEL3GIF'
     response = requests.get(url)
     if response.status_code == 200:
@@ -43,9 +42,8 @@ def get_chmap_files():
 
 
 def get_chmap_link(date, preferred_ext='wa'):
-    """
-    Given date, determine carrington rotation number, then find link for downloading associated Coronal Hole map.
-    """
+    """Given date, determine carrington rotation number, then find link for
+    downloading associated Coronal Hole map."""
     crnum = sun.carrington_rotation_number(date)
     crnum = int(crnum)
 
@@ -67,9 +65,7 @@ def get_chmap_link(date, preferred_ext='wa'):
     return download_link 
         
 def load_chmap(download_link, filepath=''):
-    """
-    Download coronal hole map from URL and save.
-    """
+    """Download coronal hole map from URL and save."""
     filename = download_link.split('/')[-1]
     if filepath=='':
         chmap_file = f'{filename}'
@@ -88,9 +84,7 @@ def load_chmap(download_link, filepath=''):
         return None
 
 def get_chmap_image(date):
-    """
-    Read in coronal hole map image.
-    """
+    """Read in coronal hole map image."""
     download_link = get_chmap_link(date)
     if download_link is not None:
         gif = load_chmap(download_link)

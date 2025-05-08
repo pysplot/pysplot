@@ -2,8 +2,8 @@ from pysplot.io.data_helpers import _transform_into_dataframe, _transform_into_s
 import pandas as pd
 
 class SpatialData:
-    """
-    A class to represent spatial data with associated time, location, and coordinate system information.
+    """A class to represent spatial data with associated time, location, and
+    coordinate system information.
 
     This class is designed to store and manipulate location data, convert it into a Pandas DataFrame, and 
     represent the data in a specific coordinate system using Astropy's `SkyCoord`. It supports resampling, 
@@ -66,18 +66,18 @@ class SpatialData:
     >>> print(spatial_data_obj.skycoord)
     """
     def __init__(self, spatial, coord=None, units=None, combine_axis='columns', interpolation_method='linear', spatial_columns_names=[], coord_kwargs={}, drop_duplicates=True):        
-        """
-        Initializes the `SpatialData` object by transforming the provided location data into a DataFrame 
-        and converting it into the specified coordinate system.
+        """Initializes the `SpatialData` object by transforming the provided
+        location data into a DataFrame and converting it into the specified
+        coordinate system.
 
         Parameters
         ----------
         spatial : list of dicts
-            A list of dictionaries, where each dictionary contains 'x' (time) and 'y' (coordinate values). 
+            A list of dictionaries, where each dictionary contains 'x' (time) and 'y' (coordinate values).
             If a single dictionary is provided, it is automatically converted into a list.
-        
+
         coord : astropy.coordinates.frame, optional
-            The coordinate system to transform the spatial data into. Valid options include Astropy coordinate frames 
+            The coordinate system to transform the spatial data into. Valid options include Astropy coordinate frames
             such as `ICRS`, `GCRS`, `Heliocentric`, etc. If `None`, no transformation is performed.
 
         units : astropy.units or list of astropy.units, optional
@@ -85,16 +85,16 @@ class SpatialData:
 
         combine_axis : str, optional
             Specifies whether to combine the data along rows ('rows') or columns ('columns'). Default is `'columns'`.
-        
+
         interpolation_method : str, optional
             The interpolation method to use when resampling the data. Default is `'linear'`.
-        
+
         spatial_columns_names : list of str, optional
             A list of column names for the DataFrame. If not provided, default names will be used.
-        
+
         coord_kwargs : dict, optional
             Additional keyword arguments to pass when transforming coordinates (e.g., frame-specific parameters).
-        
+
         drop_duplicates : bool, optional
             If `True`, duplicate data points are removed from the DataFrame. Default is `True`.
         """
@@ -125,8 +125,7 @@ class SpatialData:
 
 
 class ScienceData:
-    """
-    A class to represent scientific data with associated values and units.
+    """A class to represent scientific data with associated values and units.
 
     This class is designed to hold scientific data, convert it into a Pandas DataFrame, and provide 
     a representation of the data as an Astropy `Quantity` object, with optional unit conversion. 
@@ -189,22 +188,22 @@ class ScienceData:
     """
     
     def __init__(self, science, units=None, science_columns_names=[], drop_duplicates=True):
-        """
-        Initializes the `ScienceData` object by converting the provided scientific data into a DataFrame 
-        and converting it into the specified units as an Astropy `Quantity`.
+        """Initializes the `ScienceData` object by converting the provided
+        scientific data into a DataFrame and converting it into the specified
+        units as an Astropy `Quantity`.
 
         Parameters
         ----------
         science : list of dicts
-            A list of dictionaries, where each dictionary contains 'x' (time) and 'y' (values) keys. 
+            A list of dictionaries, where each dictionary contains 'x' (time) and 'y' (values) keys.
             If a single dictionary is provided, it is automatically converted into a list.
-        
+
         units : str or list of str, optional
             The units to apply to the scientific data. If not provided, the data is treated as unitless.
-        
+
         science_columns_names : list of str, optional
             A list of column names for the DataFrame. If not provided, default names will be generated.
-        
+
         drop_duplicates : bool, optional
             If `True`, duplicate rows in the data will be dropped. Default is `True`.
         """
@@ -232,8 +231,8 @@ class ScienceData:
 
 
 class SpatialTimeData:
-    """
-    A class to represent spatiotemporal data by combining location and science data for analysis and plotting.
+    """A class to represent spatiotemporal data by combining location and
+    science data for analysis and plotting.
 
     This class integrates spatial data (e.g., position) with science data (e.g., measurements) over time, 
     allowing for advanced analysis and visualization of spatiotemporal data. It supports transforming both location 
@@ -319,7 +318,6 @@ class SpatialTimeData:
     >>>                                      data_cadence='1T', combine_method='mean')
     >>> print(splot_data_obj.data)  # Merged and processed spatiotemporal data
     >>> print(splot_data_obj.skycoord)  # Transformed location data in the desired coordinate system
-
     """
     def __init__(self, spatial, science=None, interpolation_method='linear', data_cadence=None, combine_method='mean', desired_science_units=None, desired_coord=None, desired_coord_kwargs={}, desired_spatial_units=None):
         
@@ -342,34 +340,34 @@ class SpatialTimeData:
         
 
     def _combine_data(self, interpolation_method, data_cadence, combine_method, desired_coord, desired_spatial_units, desired_coord_kwargs, desired_science_units):
-        """
-        Prepare data for spatiotemporal plotting by transforming and combining spatial and science data.
+        """Prepare data for spatiotemporal plotting by transforming and
+        combining spatial and science data.
 
-        This method applies transformations like coordinate conversions, unit conversions, and matching the 
-        time cadence between location and science datasets. The final merged and processed data is ready 
+        This method applies transformations like coordinate conversions, unit conversions, and matching the
+        time cadence between location and science datasets. The final merged and processed data is ready
         for analysis and visualization.
 
         Parameters
         ----------
         interpolation_method : str
             The interpolation method used to resample the location data to match the science data cadence.
-        
+
         data_cadence : str or None
             The target time cadence for resampling the merged data. If `None`, no resampling is applied.
-        
+
         combine_method : str
-            The method used to combine the location and science data when merging them. 
+            The method used to combine the location and science data when merging them.
             Can be 'mean' or 'median'.
-        
+
         desired_coord : astropy.coordinates or sunpy.coordinates, optional
             The coordinate system to which the location data will be transformed.
-        
+
         desired_science_units : astropy.units, optional
             The units for the science data. If `None`, the original units are kept.
-        
+
         desired_coord_kwargs : dict, optional
             Additional keyword arguments passed to the transformation function for the coordinate system.
-        
+
         Returns
         -------
         self : SpatialTimeData
@@ -401,23 +399,23 @@ class SpatialTimeData:
         return self
     
     def transform_coord(self, desired_coord, desired_coord_kwargs={}, desired_units=None):
-        """
-        Transform the coordinate system of the spatial data to the specified `desired_coord`.
+        """Transform the coordinate system of the spatial data to the specified
+        `desired_coord`.
 
-        This method allows users to update the coordinate system of the location data and transforms the 
+        This method allows users to update the coordinate system of the location data and transforms the
         associated spatial data accordingly.
 
         Parameters
         ----------
         desired_coord : astropy.coordinates.frame
             The desired coordinate frame for the spatial data.
-        
+
         desired_coord_kwargs : dict, optional
             Additional keyword arguments passed to the transformation function for the coordinate system.
-        
+
         desired_units : astropy.units, optional
             The units for the spatial data. If `None`, the original units are retained.
-        
+
         Returns
         -------
         self : SpatialTimeData

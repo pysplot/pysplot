@@ -19,9 +19,9 @@ def _frame_has_obstime(frame):
 
 
 def _transform_into_skycoord(dataframe, frame, units, coord_kwargs={}):
-    """
-    Convert a Pandas DataFrame into an Astropy SkyCoord object for a specified coordinate frame,
-    applying appropriate units to the coordinate data.
+    """Convert a Pandas DataFrame into an Astropy SkyCoord object for a
+    specified coordinate frame, applying appropriate units to the coordinate
+    data.
 
     Parameters
     ----------
@@ -83,8 +83,8 @@ def _transform_into_skycoord(dataframe, frame, units, coord_kwargs={}):
 
 
 def _transform_into_quantity(dataframe, units):
-    """
-    Convert the numerical values in a Pandas DataFrame into an Astropy Quantity object by applying the specified units.
+    """Convert the numerical values in a Pandas DataFrame into an Astropy
+    Quantity object by applying the specified units.
 
     Parameters
     ----------
@@ -123,8 +123,8 @@ def _transform_into_quantity(dataframe, units):
     return quantity
 
 def _adjust_skycoord(skycoord, desired_coord, desired_coord_kwargs, obstime=None):
-    """
-    Transform an Astropy SkyCoord object to a specified coordinate frame at a given observation time.
+    """Transform an Astropy SkyCoord object to a specified coordinate frame at
+    a given observation time.
 
     Parameters
     ----------
@@ -178,9 +178,9 @@ def _adjust_skycoord(skycoord, desired_coord, desired_coord_kwargs, obstime=None
     return transformed_skycoord, desired_frame
 
 def _rename_dataframe_with_skycoord_columns(df, skycoord, frame, spatial_columns, desired_units):
-    """
-    Rename and update the columns of a Pandas DataFrame with coordinate data from an Astropy SkyCoord object, 
-    transforming the data to the specified units and frame.
+    """Rename and update the columns of a Pandas DataFrame with coordinate data
+    from an Astropy SkyCoord object, transforming the data to the specified
+    units and frame.
 
     Parameters
     ----------
@@ -256,9 +256,9 @@ def _rename_dataframe_with_skycoord_columns(df, skycoord, frame, spatial_columns
 
 
 def _convert_coordinates(spatial, desired_coord=None, coord_kwargs={}, desired_units=None):
-    """
-    Convert the coordinates of a given location to a desired coordinate frame, if applicable, 
-    and update the corresponding DataFrame and SkyCoord object.
+    """Convert the coordinates of a given location to a desired coordinate
+    frame, if applicable, and update the corresponding DataFrame and SkyCoord
+    object.
 
     Parameters
     ----------
@@ -319,8 +319,8 @@ def _convert_coordinates(spatial, desired_coord=None, coord_kwargs={}, desired_u
 
 
 def _convert_units(science, desired_units=None):
-    """
-    Converts the units of a `science.quantity` object to the desired units and returns the transformed data.
+    """Converts the units of a `science.quantity` object to the desired units
+    and returns the transformed data.
 
     This function takes a `science` object, which is expected to contain a `quantity` attribute (e.g., 
     an `astropy.Quantity` object), and transforms its values into the specified `desired_units`. If no 
@@ -379,11 +379,12 @@ def _convert_units(science, desired_units=None):
 
 
 def match_data_cadence(interp_data, standard_data, data_cadence=None, interpolate_columns='all', interpolation_method='time', combine_method='mean'):
-    """
-    Match the cadence (time intervals) of `interp_data` (location data) and `standard_data` (science data) 
-    by resampling or interpolating the data as necessary to align their time intervals. 
-    If the cadences are mismatched, this function either resamples or interpolates the `interp_data` to match 
-    the cadence of the `standard_data`, or applies a specified combine method to downsample the data.
+    """Match the cadence (time intervals) of `interp_data` (location data) and
+    `standard_data` (science data) by resampling or interpolating the data as
+    necessary to align their time intervals. If the cadences are mismatched,
+    this function either resamples or interpolates the `interp_data` to match
+    the cadence of the `standard_data`, or applies a specified combine method
+    to downsample the data.
 
     Parameters
     ----------
@@ -464,8 +465,8 @@ def match_data_cadence(interp_data, standard_data, data_cadence=None, interpolat
 
 
 def _transform_into_dataframe(list_of_data, column_names=[], combine_axis='columns'):
-    """
-    Convert a list of data dictionaries into a single Pandas DataFrame, with time as the index.
+    """Convert a list of data dictionaries into a single Pandas DataFrame, with
+    time as the index.
 
     This function processes a list of data dictionaries, each containing time ('x') and corresponding 
     data values ('y'). The data is then concatenated into a single DataFrame, with the time values as 
@@ -581,7 +582,10 @@ def _validate_interpolation_method(interpolation_method):
         raise ValueError(f"Invalid interpolation method. Expected one of {valid_methods}, got '{interpolation_method}'.")
 
 def _check_column_length(data, column_names, prefix=''):
-    """Checks that columns provided are the correct length given the data. Otherwise create default column names."""
+    """Checks that columns provided are the correct length given the data.
+
+    Otherwise create default column names.
+    """
     column_names_checked = []
     if len(data) > len(column_names):
         n_column_names_missing = len(data) - len(column_names)
