@@ -43,7 +43,7 @@ The most common use of ``pysplot`` involves initializing spatial and science tim
     orbit_plot(combined_data.data, ax, 'x', 'y')
 
 
-For a full example of how to use ``pysplot``, refer to our `Getting Started notebook <../examples/getting_started.ipynb>`.
+For a full example of how to use ``pysplot``, refer to our `Getting Started notebook <../../examples/getting_started.ipynb>`_.
 
 
 Using WHPI tools
